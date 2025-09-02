@@ -78,6 +78,7 @@ function App() {
 	const [loading, setLoading] = useState(false)
 	const [error, setError] = useState<string | null>(null)
 	const [rawResponse, setRawResponse] = useState<unknown>(null)
+	const [responseView, setResponseView] = useState<'json' | 'content'>('json')
 
 	const requestPayload: OpenAIChatRequest = useMemo(
 		() => ({
@@ -202,13 +203,24 @@ function App() {
 					</div>
 
 					<div className="json-section">
-						<h3 className="json-title">Response JSON</h3>
-						<pre className="code-block">{responseJsonString}</pre>
-					</div>
-
-					<div className="json-section">
-						<h3 className="json-title">Raw Response Content</h3>
-						<pre className="code-block">{outputContentUnescaped || '—'}</pre>
+						<div className="json-header">
+							<h3 className="json-title">Response</h3>
+							<div className="toggle-container">
+								<span className="toggle-label">JSON</span>
+								<label className="toggle-switch">
+									<input
+										type="checkbox"
+										checked={responseView === 'content'}
+										onChange={(e) => setResponseView(e.target.checked ? 'content' : 'json')}
+									/>
+									<span className="toggle-slider"></span>
+								</label>
+								<span className="toggle-label">Content</span>
+							</div>
+						</div>
+						<pre className="code-block">
+							{responseView === 'json' ? responseJsonString : (outputContentUnescaped || '—')}
+						</pre>
 					</div>
 				</section>
 			</div>
